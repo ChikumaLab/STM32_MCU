@@ -34,11 +34,11 @@ extern "C" {
 #include <stdio.h>
 #include "drv_cmd_If.h"
 #include "drv_oled_ssd1306.h"
+#include "drv_Power.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern uint16_t adcData[3];
 
 /* USER CODE END ET */
 

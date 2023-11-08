@@ -68,7 +68,6 @@ void app_oled_view_init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint16_t adcData[3];
 uint16_t dacData;
 /* USER CODE END 0 */
 
@@ -80,7 +79,8 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	float buf;
-
+	float adc_main,adc_edlc,adc_solar;
+	uint8_t edlc;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -112,25 +112,27 @@ int main(void)
 ///  HAL_DAC_Start(&hdac1,DAC_CHANNEL_1);
 //  HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_12B_L,dacData);
   dacData = 0x03FF;
-  HAL_ADC_Start_DMA(&hadc1,(uint32_t *)adcData,3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  buf = ((3.3 / 4096) * (float)adcData[0]) * 2;
-	  drv_oled_ssd1306_set_edlc_param(buf);
-	  if(buf > 0.8)
+	  adc_edlc = drv_Power_get_solarVolt();
+	  edlc = (uint8_t)((((adc_edlc - 1.0) + 0.1) / 1.7) * 100.0);
+	  drv_oled_ssd1306_set_edlc_param(adc_edlc);
+	  drv_oled_ssd1306_set_batt_param(edlc);
+	  if(adc_edlc > 2.0)
 	  {
+		  drv_Power_set_edlc_dcdc(ENABLE);
 	  }
-	  else
+	  else if(adc_edlc < 1.0)
 	  {
-		  // DC/DC停止
+		  drv_Power_set_edlc_dcdc(DISABLE);
 	  }
-	  buf = ((3.3 / 4096) * (float)adcData[1]) * 2 ;
-	  drv_oled_ssd1306_set_solar_param(buf);
-	  if(buf > 1.6)
+	  adc_solar = drv_Power_get_solarVolt();
+	  drv_oled_ssd1306_set_solar_param(adc_solar);
+	  if(adc_solar > 1.6)
 	  {
 		  // EDLC Charge Start
 		  HAL_GPIO_WritePin(EDLC_SW_GPIO_Port, EDLC_SW_Pin, GPIO_PIN_SET);
@@ -151,8 +153,8 @@ int main(void)
 		  // ソーラーからの給電停止
 	//	  HAL_GPIO_WritePin(SOLAR_SW_GPIO_Port,SOLAR_SW_Pin,GPIO_PIN_RESET);
 	  }
-	  buf = ((3.3 / 4096.0) * (float)adcData[2])  * 2;
-	  drv_oled_ssd1306_set_main_param(buf);
+	  adc_main = drv_Power_get_mainVolt();
+	  drv_oled_ssd1306_set_main_param(adc_main);
 //	  HAL_DAC_SetValue(&hdac1,DAC_CHANNEL_1,DAC_ALIGN_12B_R,dacData);
 	  HAL_Delay(1000);
 
@@ -291,6 +293,7 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN ADC1_Init 2 */
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED );
 
   /* USER CODE END ADC1_Init 2 */
 
@@ -521,7 +524,7 @@ void app_oled_view_init(void)
 	drv_oled_ssd1306_set_string(0,4,strView_humd,sizeof(strView_humd)-1);
 	drv_oled_ssd1306_set_string(0,6,strView_press,sizeof(strView_press)-1);
 	//drv_oled_ssd1306_set_ant_param(0);
-	//drv_oled_ssd1306_set_batt_param(0);
+	drv_oled_ssd1306_set_batt_param(0);
 
 }
 

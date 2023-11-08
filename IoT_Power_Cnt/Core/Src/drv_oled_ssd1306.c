@@ -212,6 +212,10 @@ void drv_oled_ssd1306_set_batt_param(uint8_t data)
     int i;
 
     uint8_t buf = data / 10 ;
+    if(buf > 100)
+    {
+    	buf = 100;
+    }
 
     for(i = 2;i < 15;i++)
     {

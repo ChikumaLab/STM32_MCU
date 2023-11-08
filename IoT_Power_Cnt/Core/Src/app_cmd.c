@@ -54,7 +54,6 @@ void app_pwrcmd_run(uint8_t *data,uint16_t len)
 	switch(cmd)
 	{
 	case PWR_CHECK_VOLT:
-        drv_pc_cmd_tx_sync(PWR_CHECK_VOLT,CMD_IND,(uint8_t*) adcData,6);
 		break;
 	case PWR_CHECK_PORT:
 		break;
