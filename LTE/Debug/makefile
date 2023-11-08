@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (10.3-2021.10)
+# Toolchain: GNU Tools for STM32 (11.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -79,8 +79,8 @@ all: main-build
 main-build: LTE_GPS.elf secondary-outputs
 
 # Tool invocations
-LTE_GPS.elf LTE_GPS.map: $(OBJS) $(USER_OBJS) C:\Users\User\Desktop\LTE\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "LTE_GPS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\User\Desktop\LTE\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LTE_GPS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+LTE_GPS.elf LTE_GPS.map: $(OBJS) $(USER_OBJS) C:\Dev\STM32_MCU\LTE\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "LTE_GPS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Dev\STM32_MCU\LTE\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LTE_GPS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
